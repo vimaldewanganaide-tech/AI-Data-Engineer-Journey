@@ -183,7 +183,7 @@ with open('employees.csv', 'r', encoding='utf-8') as f:
     for row in reader:
         print(row['first_name'], row['salary'])
 
-  ## 16. Difference between a compiler and an interpreter
+## 16. Difference between a compiler and an interpreter
 
   Theory:
   A compiler translates entire source code written in a high-level language into machine code (native instructions) or an intermediate form before execution. Compilation is typically a separate step that produces an executable or an artifact (binary, bytecode). An interpreter reads source code (or an intermediate representation) and executes it directly, translating on the fly.
