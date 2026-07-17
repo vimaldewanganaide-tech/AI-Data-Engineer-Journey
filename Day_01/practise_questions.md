@@ -182,6 +182,7 @@ with open('employees.csv', 'r', encoding='utf-8') as f:
     reader = csv.DictReader(f)
     for row in reader:
         print(row['first_name'], row['salary'])
+```
 
 ## 16. Difference between a compiler and an interpreter
 
