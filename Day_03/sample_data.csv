@@ -1,0 +1,11 @@
+employee_id,first_name,last_name,department_id,department_name,salary,manager_id
+101,Alice,Smith,1,Engineering,95000,
+102,James,Lee,2,Sales,83000,101
+103,Maria,Gonzalez,1,Engineering,105000,101
+104,David,Nguyen,3,Marketing,72000,102
+105,Sara,Patel,2,Sales,68000,102
+106,John,Kim,4,HR,62000,
+107,Emma,Johnson,3,Marketing,76000,102
+108,Li,Wang,1,Engineering,99000,101
+109,Noah,Brown,2,Sales,71000,102
+110,Olivia,Davis,4,HR,59000,106
