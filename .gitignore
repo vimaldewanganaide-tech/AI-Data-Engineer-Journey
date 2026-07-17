@@ -1,0 +1,81 @@
+# Bytecode, caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+ENV.bak/
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Installer / wheel artifacts
+*.egg
+*.whl
+
+# Logs and runtime files
+*.log
+*.pid
+*.sock
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Databases / data files (ignore large/generated data)
+# Remove or override if you want to keep small sample files in the repo
+/data/
+*.sqlite
+*.db
+*.db3
+
+# Secrets / environment files
+.env
+.env.*
+secrets.yml
+credentials.json
+
+# Test / coverage
+.coverage
+htmlcov/
+.coverage.*
+.pytest_cache/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+
+# Machine learning / artifacts
+models/
+checkpoints/
+*.ckpt
+*.h5
+
+# Misc
+reports/
+output/
+
+# If you want to keep a small sample CSV in the repo, uncomment and adjust:
+#!/data/sample_data.csv
+

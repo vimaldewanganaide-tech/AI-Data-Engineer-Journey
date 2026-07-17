@@ -182,4 +182,41 @@ with open('employees.csv', 'r', encoding='utf-8') as f:
     reader = csv.DictReader(f)
     for row in reader:
         print(row['first_name'], row['salary'])
+
+  ## 16. Difference between a compiler and an interpreter
+
+  Theory:
+  A compiler translates entire source code written in a high-level language into machine code (native instructions) or an intermediate form before execution. Compilation is typically a separate step that produces an executable or an artifact (binary, bytecode). An interpreter reads source code (or an intermediate representation) and executes it directly, translating on the fly.
+
+  Key differences:
+  - When translation happens: compilers translate ahead-of-time (AOT) before running; interpreters translate and execute line-by-line or by executing bytecode at runtime.
+  - Output: compilers produce standalone executables or bytecode files; interpreters generally do not (although some create bytecode caches, e.g., CPython's `.pyc`).
+  - Performance: compiled native code usually runs faster because it is optimized for the target CPU; interpreted code has runtime overhead. JITs (Just-In-Time compilers) blur this line by compiling hot paths at runtime (e.g., PyPy, JVM).
+  - Portability: interpreted languages can be more portable because the interpreter abstracts the platform; compiled binaries may be platform-specific unless compiled to portable bytecode.
+  - Development workflow: interpreted environments usually allow faster edit-run-debug cycles; compiled languages can have longer build times but may provide ahead-of-time optimizations.
+
+  Examples:
+  - C (compiled): `gcc program.c -o program` → produces a native executable `program`.
+  - Java (compile to bytecode + JVM interpreter/JIT): `javac Program.java` → `java Program` runs bytecode on the JVM (JIT may compile hot code).
+  - Python (CPython): source `.py` is compiled to bytecode (`.pyc`) and executed by the Python Virtual Machine (PVM) — a hybrid model that uses both compilation to bytecode and interpretation by the VM.
+
+  Short code comparison:
+
+  C (compiled):
+  ```c
+  #include <stdio.h>
+  int main() { printf("Hello\n"); return 0; }
+  ```
+
+  Python (interpreted/bytecode):
+  ```python
+  print("Hello")
+  ```
+
+  Relevance to data engineering:
+  - Use compiled tools or native libraries for CPU-heavy work (e.g., numerical kernels in C/Fortran used by NumPy). For orchestration, ETL, and fast iteration, interpreted languages (Python) are preferred due to ecosystem and productivity.
+
+  Practical note:
+  CPython's model (compile-to-bytecode + PVM) gives a balance: faster startup than full AOT compilation and the ability to cache bytecode (`__pycache__`) while keeping the dynamic nature of an interpreted language.
+
 ```
