@@ -1,10 +1,12 @@
--- ============================================
+-- ====================================================
 -- SQL Practice: Department and Employee Tables
--- ============================================
+-- SQL Practice: Project Table (linked to Department)
+-- ====================================================
 
 -- Drop tables if they exist (clean re-run)
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS project;
 
 -- ============================================
 -- DDL: Department Table
@@ -30,6 +32,19 @@ CREATE TABLE employee (
     manager_id      INT,
     CONSTRAINT fk_employee_department FOREIGN KEY (department_id) REFERENCES department(department_id),
     CONSTRAINT fk_employee_manager FOREIGN KEY (manager_id) REFERENCES employee(employee_id)
+);
+
+-- ============================================
+-- DDL: Project Table
+-- ============================================
+CREATE TABLE project (
+    project_id      INT PRIMARY KEY,
+    project_name    VARCHAR(150) NOT NULL,
+    department_id   INT,
+    start_date      DATE NOT NULL,
+    end_date        DATE,
+    budget          DECIMAL(12,2),
+    CONSTRAINT fk_project_department FOREIGN KEY (department_id) REFERENCES department(department_id)
 );
 
 -- ============================================
@@ -156,3 +171,24 @@ INSERT INTO employee (employee_id, first_name, last_name, email, hire_date, job_
 (1103, 'Sharon', 'White', 'sharon.white@company.com', '2022-12-05', 'DevOps Engineer', 56543.00, 20, 1002),
 (1104, 'Katherine', 'Moore', 'katherine.moore@company.com', '2024-09-25', 'Paralegal', 75465.00, 90, 1009),
 (1105, 'Carolyn', 'Nguyen', 'carolyn.nguyen@company.com', '2019-06-28', 'Operations Manager', 50679.00, 70, 1007);
+
+
+-- ============================================
+-- DML: Project Data (15 records)
+-- ============================================
+INSERT INTO project (project_id, project_name, department_id, start_date, end_date, budget) VALUES
+(1, 'Customer Portal Revamp', 20, '2023-01-15', '2023-08-30', 250000.00),
+(2, 'Payroll Automation', 10, '2022-06-01', '2023-01-31', 120000.00),
+(3, 'Q4 Sales Campaign', 30, '2023-09-01', '2023-12-31', 80000.00),
+(4, 'Brand Refresh', 40, '2023-02-01', '2023-05-15', 60000.00),
+(5, 'Annual Audit Prep', 50, '2023-11-01', '2024-01-15', 45000.00),
+(6, 'Cloud Migration', 60, '2022-03-01', '2023-03-01', 500000.00),
+(7, 'Warehouse Optimization', 70, '2023-04-01', '2023-10-01', 150000.00),
+(8, 'Support Ticket System Upgrade', 80, '2023-01-10', '2023-06-30', 90000.00),
+(9, 'Contract Review Automation', 90, '2023-05-01', '2023-09-30', 70000.00),
+(10, 'New Product Prototype', 100, '2022-10-01', '2023-07-01', 300000.00),
+(11, 'Mobile App Launch', 20, '2023-03-01', '2024-02-28', 400000.00),
+(12, 'Recruitment Drive 2023', 10, '2023-01-01', '2023-12-31', 50000.00),
+(13, 'International Expansion - Sales', 30, '2023-06-01', '2024-06-01', 200000.00),
+(14, 'Data Center Consolidation', 60, '2023-07-01', '2024-01-31', 350000.00),
+(15, 'Employee Wellness Program', 10, '2023-02-15', '2023-12-15', 35000.00);

@@ -3,7 +3,6 @@
 --department(department_id,department_name,location)
 
 --Basics — SELECT, WHERE, ORDER BY (1–10)
-
 -- 1. List all employees' first name, last name, and salary.
 select first_name, last_name, salary from employee;
 -- 2. Find all employees who work in department 20 (Engineering).
@@ -25,7 +24,7 @@ select * from employee where manager_id is null;
 -- 10. Find the employee with the highest salary.
 select * from employee where salary = (select max(salary) from employee);
 
-
+-- Aggregate Functions (11–20)
 -- 11. Count the total number of employees.
 select count(*) from employee;
 -- 12. Count the number of departments.
@@ -47,6 +46,7 @@ select year(hire_date) as hire_year, count(*) from employee group by year(hire_d
 -- 20. Find the highest-paid employee in each department.
 select e1.* from employee e1 join (select department_id, max(salary) as max_salary from employee group by department_id) e2 on e1.department_id = e2.department_id and e1.salary = e2.max_salary;
 
+-- GROUP BY / HAVING (21–29)
 -- 21. List departments having more than 8 employees.
 select department_id, count(*) as employee_count from employee group by department_id having employee_count > 8;
 -- 22. List departments whose average salary exceeds 70,000.
@@ -66,53 +66,97 @@ select department_id, (max(salary) - min(salary)) as salary_range from employee 
 -- 29. find mangaer name with maximum number of direct reports
 select e1.manager_id,e2.first_name, e2.last_name, count(*) as direct_reports from employee e1 join employee e2 on e1.manager_id = e2.employee_id group by e1.manager_id order by direct_reports desc limit 1;
 
--- JOINs (29–38)
--- 29. List each employee along with their department name.
+-- JOINs (30–39)
+-- 30. List each employee along with their department name.
 select e.first_name, e.last_name, d.department_name from employee e join department d on e.department_id = d.department_id;
--- 30. List each employee along with their manager's name (self-join).
+-- 31. List each employee along with their manager's name (self-join).
 select e1.first_name as employee_first_name, e1.last_name as employee_last_name, e2.first_name as manager_first_name, e2.last_name as manager_last_name from employee e1 left join employee e2 on e1.manager_id = e2.employee_id;
--- 31. Find all departments that currently have zero employees (if any), using LEFT JOIN.
+-- 32. Find all departments that currently have zero employees (if any), using LEFT JOIN.
 select d.department_name from department d left join employee e on d.department_id = e.department_id where e.employee_id is null;
--- 32. List employees and department location together.
+-- 33. List employees and department location together.
 select e.first_name, e.last_name, d.location from employee e join department d on e.department_id = d.department_id;
--- 33. Find employees who work in the same department as "Engineering".
+-- 34. Find employees who work in the same department as "Engineering".
 select e.* from employee e join department d on e.department_id = d.department_id where d.department_name = 'Engineering';      
--- 34. List each manager along with the count of their direct reports.
+-- 35. List each manager along with the count of their direct reports.
 select e2.first_name, e2.last_name, count(e1.employee_id) as direct_reports from employee e1 join employee e2 on e1.manager_id = e2.employee_id group by e2.employee_id;
--- 35. Find employees earning more than their manager.
+-- 36. Find employees earning more than their manager.
 select e1.first_name, e1.last_name, e1.salary, e2.first_name as manager_first_name, e2.last_name as manager_last_name, e2.salary as manager_salary from employee e1 join employee e2 on e1.manager_id = e2.employee_id where e1.salary > e2.salary;
--- 36. List department name, employee name, and salary sorted by department then salary descending.
+-- 37. List department name, employee name, and salary sorted by department then salary descending.
 select d.department_name, e.first_name, e.last_name, e.salary from employee e join department d on e.department_id = d.department_id order by d.department_name, e.salary desc;
--- 37. Find the manager name for each employee in the Sales department.
+-- 38. Find the manager name for each employee in the Sales department.
 select e1.first_name as employee_first_name, e1.last_name as employee_last_name, e2.first_name as manager_first_name, e2.last_name as manager_last_name from employee e1 join employee e2 on e1.manager_id = e2.employee_id join department d on e1.department_id = d.department_id where d.department_name = 'Sales';
--- 38. List all employee-manager pairs where both work in different departments (shouldn't normally happen — validate data integrity).
+-- 39. List all employee-manager pairs where both work in different departments (shouldn't normally happen — validate data integrity).
 select e1.first_name as employee_first_name, e1.last_name as employee_last_name, d1.department_name as employee_department, e2.first_name as manager_first_name, e2.last_name as manager_last_name, d2.department_name as manager_department from employee e1 join employee e2 on e1.manager_id = e2.employee_id join department d1 on e1.department_id = d1.department_id join department d2 on e2.department_id = d2.department_id where d1.department_id != d2.department_id;
 
 
--- Subqueries (39–45)
--- 39. Find employees who earn more than the company average salary.
+-- Subqueries (40–46)
+-- 40. Find employees who earn more than the company average salary.
 select * from employee where salary > (select avg(salary) from employee);
--- 40. Find employees who earn more than their department's average salary.
+-- 41. Find employees who earn more than their department's average salary.
 select * from employee e1 where salary > (select avg(salary) from employee e2 where e2.department_id = e1.department_id);
--- 41. Find the department(s) with the maximum average salary using a subquery.
+-- 42. Find the department(s) with the maximum average salary using a subquery.
 select department_id from employee group by department_id having avg(salary) = (select max(avg_salary) from (select avg(salary) as avg_salary from employee group by department_id) as dept_avg);
--- 42. Find employees who are not managers (i.e., no one reports to them).
+-- 43. Find employees who are not managers (i.e., no one reports to them).
 select * from employee where employee_id not in (select distinct manager_id from employee where manager_id is not null);
--- 43. Find the second-highest salary in the company.
+-- 44. Find the second-highest salary in the company.
 select distinct salary from employee order by salary desc limit 1 offset 1; 
--- 44. Find employees hired in the same year as the most recently hired employee.
+-- 45. Find employees hired in the same year as the most recently hired employee.
 select * from employee where year(hire_date) = (select year(max(hire_date)) from employee);
--- 45. List departments where the average salary is above the overall company average.  
+-- 46. List departments where the average salary is above the overall company average.  
 select department_id from employee group by department_id having avg(salary) > (select avg(salary) from employee);  
 
--- Advanced / Window Functions (46–50)
--- 46. Rank employees by salary within each department (RANK() OVER (PARTITION BY department_id ORDER BY salary DESC)).
+-- Advanced / Window Functions (47–51)
+-- 47. Rank employees by salary within each department (RANK() OVER (PARTITION BY department_id ORDER BY salary DESC)).
 select employee_id, first_name, last_name, department_id, salary, RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) as salary_rank from employee;
--- 47. Find the top 3 highest-paid employees in each department.
+-- 48. Find the top 3 highest-paid employees in each department.
 select * from (select employee_id, first_name, last_name, department_id, salary, ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary DESC) as row_num from employee) ranked where row_num <= 3;
--- 48. Calculate a running total of salaries ordered by hire_date.
+-- 49. Calculate a running total of salaries ordered by hire_date.
 select employee_id, first_name, last_name, hire_date, salary, SUM(salary) OVER (ORDER BY hire_date) as running_total from employee;
--- 49. Find the difference between each employee's salary and their department's average salary.
+-- 50. Find the difference between each employee's salary and their department's average salary.
 select employee_id, first_name, last_name, department_id, salary, salary - (select avg(salary) from employee e2 where e2.department_id = e1.department_id) as salary_diff from employee e1;
--- 50. Find each employee's salary rank company-wide and their department-wide rank side by side.
+-- 51. Find each employee's salary rank company-wide and their department-wide rank side by side.
 select employee_id, first_name, last_name, department_id, salary, RANK() OVER (ORDER BY salary DESC) as company_rank, RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) as dept_rank from employee; 
+
+-- Basics — JOINs across 3 tables (52–59)
+-- 52. List all projects along with their department name
+select p.project_name, d.department_name from project p join department d on p.department_id = d.department_id;
+-- 53. List all employees along with the projects their department is running
+select e.first_name, e.last_name, p.project_name from employee e join project p on e.department_id = p.department_id;
+-- 54. Find all projects run by the "Engineering" department
+select p.* from project p join department d on p.department_id = d.department_id where d.department_name = 'Engineering';
+-- 55. List department name, project name, and budget together, sorted by budget descending
+select d.department_name, p.project_name, p.budget from department d join project p on d.department_id = p.department_id order by p.budget desc;        
+-- 56. Find employees who belong to a department currently running more than one project
+-- 57. List all projects that started in 2023
+-- 58. Find projects with no end date (ongoing projects, if any)
+-- 59. List departments that have no projects assigned (LEFT JOIN / NOT EXISTS)
+
+-- Aggregates on Projects (59–68)
+-- 60. Find the total budget allocated across all projects
+-- 61. Find the total project budget per department
+-- 62. Find the average project budget per department
+-- 63. Count the number of projects per department
+-- 64. Find the department with the highest total project budget
+-- 65. Find the project with the highest budget
+-- 66. Find the project with the longest duration (end_date - start_date)
+-- 67. Find the average project duration across all projects
+-- 68. Find departments where total project budget exceeds their total employee salary cost
+-- 69. Count how many projects are still active as of today's date (end_date >= CURRENT_DATE)
+
+
+-- HAVING / Filtering (70–74)
+-- 70. List departments with more than 1 project AND average project budget above 100,000.
+-- 71. Find projects with a budget above the average budget of all projects.
+-- 72. Find departments where every project has a budget greater than 50,000.
+-- 73. List the top 3 highest-budget projects company-wide.
+-- 74. Find projects that overlap in time with "Cloud Migration" (date range overlap).
+
+
+-- Advanced — Combining Employee + Department + Project (75–81)
+-- 75. For each department, show: employee count, total salary cost, project count, and total project budget — in one query.
+-- 76. Find the manager of the department running the "Mobile App Launch" project.
+-- 77. Rank departments by total project budget using a window function.
+-- 78. Find employees working in departments whose projects have a combined budget over 300,000.
+-- 79. Calculate the ratio of total project budget to total department salary cost, per department.
+-- 80. Find the department with the best "budget efficiency" (lowest project budget per employee).
+-- 81. Write a query that returns department name, number of employees, number of projects, and flags departments as 'Understaffed' if employees < 5 and project count > 1, else 'OK'.
